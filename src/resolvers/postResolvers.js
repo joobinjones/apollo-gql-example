@@ -1,10 +1,6 @@
-import { checkIfUserExists, findIndexOfItem } from "../middleware.js";
-import db from "../db.js";
-import uuidv1 from "uuid/v1.js";
-
 export default {
   Query: {
-    posts(parent, args, ctx, info) {
+    posts(parent, args, { db }, info) {
       if (args.query) {
         const query = args.query.toLowerCase();
         return db.posts.filter((post) => {
@@ -17,7 +13,7 @@ export default {
     },
   },
   Mutation: {
-    createPost(parent, args, ctx, info) {
+    createPost(parent, args, { db, checkIfUserExists, uuidv1 }, info) {
       checkIfUserExists(args.data.author);
       const post = {
         id: uuidv1(),
@@ -26,7 +22,7 @@ export default {
       db.posts.push(post);
       return post;
     },
-    deletePost(parent, args, ctx, info) {
+    deletePost(parent, args, { db, findIndexOfItem }, info) {
       const postIndex = findIndexOfItem(args.id, db.posts, "Post");
       const deletedPost = db.posts.splice(postIndex, 1)[0];
       db.comments = db.comments.filter((comment) => comment.post !== args.id);
@@ -35,10 +31,10 @@ export default {
   },
   Post: {
     // parent = a post
-    author(parent, args, ctx, info) {
+    author(parent, args, { db }, info) {
       return db.users.find((user) => user.id === parent.author);
     },
-    comments(parent, args, ctx, info) {
+    comments(parent, args, { db }, info) {
       return db.comments.filter((comment) => comment.post === parent.id);
     },
   },

@@ -1,19 +1,7 @@
 import commentResolvers from "./commentResolvers.js";
+import { mergeResolvers } from "@graphql-tools/merge";
 import postResolvers from "./postResolvers.js";
 import userResolvers from "./userResolvers.js";
 
-export default {
-  ...userResolvers,
-  ...postResolvers,
-  ...commentResolvers,
-  Query: {
-    ...userResolvers.Query,
-    ...postResolvers.Query,
-    ...commentResolvers.Query,
-  },
-  Mutation: {
-    ...userResolvers.Mutation,
-    ...postResolvers.Mutation,
-    ...commentResolvers.Mutation,
-  },
-};
+const resolvers = [userResolvers, postResolvers, commentResolvers];
+export default mergeResolvers(resolvers);

@@ -70,15 +70,6 @@
     resolve-from "5.0.0"
     tslib "~2.3.0"
 
-"@graphql-tools/load-files@^6.4.0":
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/load-files/-/load-files-6.4.0.tgz#59f982a22794e1db064248b5776e650e8c33d215"
-  integrity sha512-Dl/3mhFDXWRHhEyVY0nABw+yOFcxfU0iKsLrX0E/wlTiqHRQJORGmxLFRbSGpwcP694dvpujsp/SCt+qz//PkA==
-  dependencies:
-    globby "11.0.4"
-    tslib "~2.3.0"
-    unixify "1.0.0"
-
 "@graphql-tools/load@^7.2.0":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@graphql-tools/load/-/load-7.2.0.tgz#b5caae065aa3b671b5242b4e53e6b1f689b2a78c"
@@ -89,7 +80,7 @@
     p-limit "3.1.0"
     tslib "~2.3.0"
 
-"@graphql-tools/merge@^8.1.0":
+"@graphql-tools/merge@^8.1.0", "@graphql-tools/merge@^8.1.1":
   version "8.1.1"
   resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-8.1.1.tgz#692ff0de5e6b025a1166e25d7cda4e20ec0c2df3"
   integrity sha512-zyeUbFG5zasSQC6LnBxzhmPTLYeeT3c0ijYfmFlIlOLiTAdRgCjIba03l6kKHcCiMDJYr+P+Nz5kKYLGqPSSjQ==
@@ -930,7 +921,7 @@ global-dirs@^2.0.1:
   dependencies:
     ini "1.3.7"
 
-globby@11.0.4, globby@^11.0.3:
+globby@^11.0.3:
   version "11.0.4"
   resolved "https://registry.yarnpkg.com/globby/-/globby-11.0.4.tgz#2cbaff77c2f2a62e71e9b2813a67b97a3a3001a5"
   integrity sha512-9O4MVG9ioZJ08ffbcyVYyLOJLk5JQ688pJ4eMGLpdWLHq/Wr1D9BlriLQyL0E+jbkuePVZXYFj47QM/v093wHg==
@@ -1189,11 +1180,6 @@ lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
-
-lodash@^4.17.21:
-  version "4.17.21"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
-  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 loglevel@^1.6.8:
   version "1.7.1"
@@ -1802,7 +1788,7 @@ unique-string@^2.0.0:
   dependencies:
     crypto-random-string "^2.0.0"
 
-unixify@1.0.0, unixify@^1.0.0:
+unixify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unixify/-/unixify-1.0.0.tgz#3a641c8c2ffbce4da683a5c70f03a462940c2090"
   integrity sha1-OmQcjC/7zk2mg6XHDwOkYpQMIJA=

@@ -1,10 +1,6 @@
-import { findIndexOfItem } from "../middleware.js";
-import db from "../db.js";
-import uuidv1 from "uuid/v1.js";
-
 export default {
   Query: {
-    users(parent, args, ctx, info) {
+    users(parent, args, { db }, info) {
       if (args.query) {
         return db.users.filter((user) =>
           user.name.toLowerCase().includes(args.query.toLowerCase())
@@ -14,7 +10,7 @@ export default {
     },
   },
   Mutation: {
-    createUser(parent, args, ctx, info) {
+    createUser(parent, args, { db, uuidv1 }, info) {
       const emailIsTaken = db.users.some((user) => user.email === args.data.email);
       if (emailIsTaken) {
         throw new Error("This email is already in use");
@@ -26,7 +22,7 @@ export default {
       db.users.push(user);
       return user;
     },
-    deleteUser(parent, args, ctx, info) {
+    deleteUser(parent, args, { db, findIndexOfItem }, info) {
       const userIndex = findIndexOfItem(args.id, db.users, "User");
       const deletedUser = db.users.splice(userIndex, 1)[0];
       // remove the posts by the deleted user
@@ -44,10 +40,10 @@ export default {
     },
   },
   User: {
-    posts(parent, args, ctx, info) {
+    posts(parent, args, { db }, info) {
       return db.posts.filter((post) => post.author === parent.id);
     },
-    comments(parent, args, ctx, info) {
+    comments(parent, args, { db }, info) {
       return db.comments.filter((comment) => comment.author === parent.id);
     },
   },
