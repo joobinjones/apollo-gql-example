@@ -1,6 +1,6 @@
-import commentResolvers from "./comment.js";
-import postResolvers from "./post.js";
-import userResolvers from "./user.js";
+import commentResolvers from "./commentResolvers.js";
+import postResolvers from "./postResolvers.js";
+import userResolvers from "./userResolvers.js";
 
 export default {
   ...userResolvers,

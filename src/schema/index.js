@@ -1,7 +1,7 @@
 import { gql } from "apollo-server";
-import userSchema from "./user.js";
-import postSchema from "./post.js";
-import commentSchema from "./comment.js";
+import userSchema from "./userSchema.js";
+import postSchema from "./postSchema.js";
+import commentSchema from "./commentSchema.js";
 
 const queryAndMutation = gql`
   type Query {
