@@ -30,7 +30,7 @@ export default {
       return comment;
     },
     deleteComment(parent, args, ctx, info) {
-      const commentIndex = findIndexOfItem(args.id, db.omments, "Comment");
+      const commentIndex = findIndexOfItem(args.id, db.comments, "Comment");
       const deletedComment = db.comments.splice(commentIndex, 1)[0];
       return deletedComment;
     },
