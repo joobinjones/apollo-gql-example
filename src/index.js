@@ -1,14 +1,15 @@
 import { ApolloServer, gql } from "apollo-server";
 import uuidv1 from "uuid/v1.js";
-// some user data
-const users = [
+
+// sample data: users, posts, and comments
+let users = [
   { id: "1", name: "Austin Jones", email: "austinjones@example.com", age: 24 },
   { id: "2", name: "Andrew Meade", email: "andrew@udemy.com", age: 27 },
   { id: "3", name: "Jane Marie", email: "jane@elmo.com", age: 4 },
   { id: "4", name: "Mia Ann", email: "mia@example.com", age: 1 },
 ];
 
-const posts = [
+let posts = [
   {
     id: "abc123",
     title: "First Post",
@@ -19,7 +20,7 @@ const posts = [
   {
     id: "123abc",
     title: "On the Second World War",
-    body: "World war two sucked.",
+    body: "World War Two was very not good.",
     published: false,
     author: "2",
   },
@@ -39,22 +40,35 @@ const posts = [
   },
 ];
 
-const comments = [
+let comments = [
   { id: "a", text: "comment one", author: "4", post: "456def" },
   { id: "b", text: "second comment", author: "3", post: "def456" },
   { id: "c", text: "comment number three", author: "1", post: "abc123" },
   { id: "d", text: "fourth and final comment", author: "2", post: "123abc" },
 ];
 
+// middleware between request and response to be used in resolvers
 const middleware = {
-  userExists(userId) {
-    return users.some((user) => userId === user.id);
+  checkIfUserExists(userToFind) {
+    if (!users.some((user) => user.id === userToFind)) {
+      throw new Error("User Not Found!");
+    }
   },
-  postExists(postId) {
-    return posts.some((post) => postId === post.id && post.published);
+  checkIfPostExists(postToFind) {
+    if (!posts.some((post) => post.id === postToFind && post.published)) {
+      throw new Error("Post Not Found!");
+    }
+  },
+  findIndexOfUser(userToFind) {
+    const userIndex = users.findIndex((user) => user.id === userToFind);
+    if (userIndex === -1) {
+      throw new Error("User Not Found!");
+    }
+    return userIndex;
   },
 };
-const { userExists, postExists } = middleware;
+const { checkIfUserExists, checkIfPostExists, findIndexOfUser } = middleware;
+
 // Type definitions also known as application schema
 const typeDefs = gql`
   type Query {
@@ -66,14 +80,29 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createUser(name: String!, email: String!, age: Int): User!
-    createPost(
-      title: String!
-      body: String!
-      published: Boolean!
-      author: ID!
-    ): Post!
-    createComment(text: String!, author: ID!, post: ID!): Comment!
+    createUser(data: CreateUserInput): User!
+    deleteUser(id: ID!): User!
+    createPost(data: CreatePostInput): Post!
+    createComment(data: CreateCommentInput): Comment!
+  }
+
+  input CreateUserInput {
+    name: String!
+    email: String!
+    age: Int
+  }
+
+  input CreatePostInput {
+    title: String!
+    body: String!
+    published: Boolean!
+    author: ID!
+  }
+
+  input CreateCommentInput {
+    text: String!
+    author: ID!
+    post: ID!
   }
 
   type User {
@@ -134,39 +163,50 @@ const resolvers = {
   },
   Mutation: {
     createUser(parent, args, ctx, info) {
-      const emailIsTaken = users.some((user) => user.email === args.email);
+      const emailIsTaken = users.some((user) => user.email === args.data.email);
       if (emailIsTaken) {
         throw new Error("This email is already in use");
       }
       const user = {
         id: uuidv1(),
-        ...args,
+        ...args.data,
       };
       users.push(user);
       return user;
     },
     createPost(parent, args, ctx, info) {
-      if (!userExists(args.author)) {
-        throw new Error("User not found");
-      }
-
+      checkIfUserExists(args.data.id);
       const post = {
         id: uuidv1(),
-        ...args,
+        ...args.data,
       };
       posts.push(post);
       return post;
     },
     createComment(parent, args, ctx, info) {
-      if (!userExists(args.author)) throw new Error("User not found");
-      if (!postExists(args.post)) throw new Error("Post not found");
+      checkIfUserExists(args.data.author);
+      checkIfPostExists(args.data.post);
 
       const comment = {
         id: uuidv1(),
-        ...args,
+        ...args.data,
       };
       comments.push(comment);
       return comment;
+    },
+    deleteUser(parent, args, ctx, info) {
+      const userIndex = findIndexOfUser(args.id);
+      const deletedUser = users.splice(userIndex, 1)[0];
+      // remove the posts by the deleted user
+      posts = posts.filter((post) => {
+        const match = post.author === args.id;
+        // for each matched post to the deleted user, delete all of the post's comments
+        if (match) comments = comments.filter((comment) => comment.post !== post.id);
+        return !match;
+      });
+      // finally, remove all comments by the deleted user
+      comments = comments.filter((comment) => comment.author !== args.id);
+      return deletedUser;
     },
   },
   // parent = a post
@@ -201,5 +241,5 @@ const resolvers = {
 
 const server = new ApolloServer({ typeDefs, resolvers });
 server.listen({ port: 8080 }).then(({ url }) => {
-  console.log(`Server running on ${url || "http://localhost:4000/"}...`);
+  console.log(`Server ready at ${url || "http://localhost:4000/"}`);
 });
