@@ -30,10 +30,12 @@ export default {
       const userIndex = findIndexOfItem(args.id, db.users, "User");
       const deletedUser = db.users.splice(userIndex, 1)[0];
       // remove the posts by the deleted user
-      posts = posts.filter((post) => {
+      db.posts = db.posts.filter((post) => {
         const match = post.author === args.id;
         // for each matched post to the deleted user, delete all of the post's comments
-        if (match) comments = comments.filter((comment) => comment.post !== post.id);
+        if (match) {
+          db.comments = db.comments.filter((comment) => comment.post !== post.id);
+        }
         return !match;
       });
       // finally, remove all comments by the deleted user
