@@ -1,11 +1,13 @@
-let users = [
+import { Users, Posts, Comments } from "./types";
+
+let users: Users = [
   { id: "1", name: "Austin Jones", email: "austinjones@example.com", age: 24 },
   { id: "2", name: "Andrew Meade", email: "andrew@udemy.com", age: 27 },
   { id: "3", name: "Jane Marie", email: "jane@elmo.com", age: 4 },
   { id: "4", name: "Mia Ann", email: "mia@example.com", age: 1 },
 ];
 
-let posts = [
+let posts: Posts = [
   {
     id: "abc123",
     title: "First Post",
@@ -36,7 +38,7 @@ let posts = [
   },
 ];
 
-let comments = [
+let comments: Comments = [
   { id: "a", text: "comment one", author: "4", post: "456def" },
   { id: "b", text: "second comment", author: "3", post: "def456" },
   { id: "c", text: "comment number three", author: "1", post: "abc123" },
