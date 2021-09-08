@@ -7,4 +7,4 @@ const typeDefs = loadSchemaSync("src/schema/*.graphql", {
   loaders: [new GraphQLFileLoader()],
 });
 
-export default makeExecutableSchema({ typeDefs, resolvers });
+export const schema = makeExecutableSchema({ typeDefs, resolvers });

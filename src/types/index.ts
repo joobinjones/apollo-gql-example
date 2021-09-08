@@ -1,7 +1,12 @@
-import { CreateUserInput, User, Users, UsersElement } from "./User";
-import { CreatePostInput, Post, Posts, PostsElement } from "./Post";
-import { CreateCommentInput, Comment, Comments, CommentsElement } from "./Comment";
-import { Context, DB } from "./Context";
+import { CreateUserInput, User, Users, UsersElement } from "./user.types";
+import { CreatePostInput, Post, Posts, PostsElement } from "./post.types";
+import {
+  CreateCommentInput,
+  Comment,
+  Comments,
+  CommentsElement,
+} from "./comment.types";
+import { Context, DB } from "./context.types";
 
 export {
   CreateUserInput,

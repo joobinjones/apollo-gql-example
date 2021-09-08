@@ -1,7 +1,7 @@
 import { ApolloServer } from "apollo-server";
 import db from "./db";
 import { checkIfUserExists, checkIfPostExists, findIndexOfItem } from "./middleware";
-import schema from "./schema";
+import { schema } from "./schema";
 import uuid from "uuid/index";
 
 const server = new ApolloServer({
