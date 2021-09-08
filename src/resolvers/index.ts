@@ -1,7 +1,7 @@
-import commentResolvers from "./comment.resolvers";
-import { mergeResolvers } from "@graphql-tools/merge";
-import postResolvers from "./post.resolvers";
-import userResolvers from "./user.resolvers";
+import { Query } from "./Query";
+import { Mutation } from "./Mutation";
+import { User } from "./user.resolvers";
+import { Post } from "./post.resolvers";
+import { Comment } from "./comment.resolvers";
 
-const resolvers = [userResolvers, postResolvers, commentResolvers];
-export default mergeResolvers(resolvers);
+export const resolvers = { Query, Mutation, User, Post, Comment };
