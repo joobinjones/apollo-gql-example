@@ -4,6 +4,10 @@ input CreateCommentInput {
   post: ID!
 }
 
+input UpdateCommentInput {
+  text: String
+}
+
 type Comment {
   id: ID!
   text: String!

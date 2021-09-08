@@ -1,4 +1,4 @@
-import { Context } from "../../types";
+import { Context, CommentsElement } from "../../types";
 
 export const commentMutations = {
   createComment(
@@ -15,6 +15,18 @@ export const commentMutations = {
       ...args.data,
     };
     db.comments.push(comment);
+    return comment;
+  },
+  updateComment(parent: any, { id, data }: any, { db }: Context, info: any) {
+    const comment = db.comments.find(
+      (comment: CommentsElement) => comment?.id === id
+    );
+    if (!comment) {
+      throw new Error("Comment Not Found!");
+    }
+    if (typeof data.text === "string") {
+      comment!.text = data.text;
+    }
     return comment;
   },
   deleteComment(

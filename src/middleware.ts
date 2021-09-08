@@ -1,15 +1,15 @@
-import { DB, User, Post, Comment } from "./types";
+import { DB, User, Post, Comment, Users, Posts } from "./types";
 
 type DBArray = Array<User | Post | Comment | undefined | null>;
 
-function checkIfUserExists(userToFind: string, db: DB) {
-  if (!db.users.some((user) => user?.id === userToFind)) {
+function checkIfUserExists(userToFind: string, users: Users) {
+  if (!users.some((user) => user?.id === userToFind)) {
     throw new Error("User Not Found!");
   }
 }
 
-function checkIfPostExists(postToFind: string, db: DB) {
-  if (!db.posts.some((post) => post?.id === postToFind && post?.published)) {
+function checkIfPostExists(postToFind: string, posts: Posts) {
+  if (!posts.some((post) => post?.id === postToFind && post?.published)) {
     throw new Error("Post Not Found!");
   }
 }

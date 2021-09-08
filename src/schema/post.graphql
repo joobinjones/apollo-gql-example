@@ -5,6 +5,12 @@ input CreatePostInput {
   author: ID!
 }
 
+input UpdatePostInput {
+  title: String
+  body: String
+  published: Boolean
+}
+
 type Post {
   id: ID!
   title: String!
