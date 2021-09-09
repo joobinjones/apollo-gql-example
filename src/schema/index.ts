@@ -3,8 +3,6 @@ import { loadSchemaSync } from "@graphql-tools/load";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { resolvers } from "../resolvers";
 
-const typeDefs = loadSchemaSync("src/schema/*.graphql", {
+export const typeDefs = loadSchemaSync("src/schema/*.graphql", {
   loaders: [new GraphQLFileLoader()],
 });
-
-export const schema = makeExecutableSchema({ typeDefs, resolvers });
