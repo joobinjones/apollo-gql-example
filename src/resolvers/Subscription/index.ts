@@ -8,9 +8,9 @@ export const Subscription = {
       setInterval(() => {
         count++;
         // publish data to it
-        pubsub.publish("count", { count });
+        pubsub.publish("count", count);
       }, 1000);
-      return pubsub.asyncIterator(["count"]);
+      return pubsub.asyncIterator("count");
     },
   },
 };

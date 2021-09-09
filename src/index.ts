@@ -1,31 +1,52 @@
-import { ApolloServer } from "apollo-server";
-// import { execute, subscribe } from "graphql";
-import { checkIfUserExists, checkIfPostExists, findIndexOfItem } from "./middleware";
-import db from "./db";
+import { ApolloServer } from "apollo-server-express";
+import { createServer } from "http";
+import express from "express";
+import { execute, subscribe } from "graphql";
+import { SubscriptionServer } from "subscriptions-transport-ws";
+import { makeExecutableSchema } from "graphql-tools";
+import { typeDefs } from "./schema";
+import { resolvers } from "./resolvers";
 import { PubSub } from "graphql-subscriptions";
-// import { RedisPubSub } from "graphql-redis-subscriptions";
-import { schema } from "./schema";
-// import { SubscriptionServer } from "subscriptions-transport-ws";
-import uuid from "uuid/index";
+import db from "./db";
+import uuid from "uuid";
+import { checkIfPostExists, checkIfUserExists, findIndexOfItem } from "./middleware";
 
-// using Redis instead of regular PubSub from gql-subs because better for production
-// const pubsub = new RedisPubSub();
+// graphql-ws
+const app = express();
+const schema = makeExecutableSchema({ typeDefs, resolvers });
 const pubsub = new PubSub();
-// const subscriptionServer = new SubscriptionServer(
-//   { schema, execute, subscribe },
-//   { server, path: server.graphqlPath }
-// );
-const server = new ApolloServer({
+const apolloServer = new ApolloServer({
   schema,
   context: {
     db,
-    pubsub,
     checkIfUserExists,
     checkIfPostExists,
     findIndexOfItem,
     uuidv1: uuid.v1,
+    pubsub,
   },
+  plugins: [
+    {
+      async serverWillStart() {
+        return {
+          async drainServer() {
+            subscriptionServer.close();
+          },
+        };
+      },
+    },
+  ],
 });
-server.listen({ port: 8080 }).then(({ url }) => {
-  console.log(`Server ready at ${url || "http://localhost:4000/"}`);
-});
+const httpServer = createServer(app);
+const subscriptionServer = SubscriptionServer.create(
+  { schema, execute, subscribe },
+  { server: httpServer, path: "/graphql" }
+);
+async function startServer() {
+  await apolloServer.start();
+  apolloServer.applyMiddleware({ app });
+  httpServer.listen(8080, () => {
+    console.log("Server running at http://localhost:8080/graphql");
+  });
+}
+startServer();
