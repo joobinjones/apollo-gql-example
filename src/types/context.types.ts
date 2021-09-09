@@ -1,3 +1,5 @@
+// import { RedisPubSub } from "graphql-redis-subscriptions";
+import { RedisPubSub } from "graphql-redis-subscriptions";
 import { Users, Posts, Comments } from ".";
 
 interface DB {
@@ -8,6 +10,7 @@ interface DB {
 
 interface Context {
   db: DB;
+  pubsub: RedisPubSub;
   checkIfUserExists: Function;
   checkIfPostExists: Function;
   findIndexOfItem: Function;

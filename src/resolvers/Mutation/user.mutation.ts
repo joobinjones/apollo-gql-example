@@ -27,7 +27,7 @@ export const userMutations = {
     { db, checkIfUserExists }: Context,
     info: any
   ) {
-    checkIfUserExists(id, db);
+    checkIfUserExists(id, db.users);
     const user = db.users.find((user: UsersElement) => user?.id === id);
     if (typeof data.email === "string") {
       const emailIsTaken = db.users.some(

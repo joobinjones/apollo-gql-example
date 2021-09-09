@@ -7,8 +7,8 @@ export const commentMutations = {
     { db, checkIfUserExists, checkIfPostExists, uuidv1 }: Context,
     info: any
   ) {
-    checkIfUserExists(args.data.author, db);
-    checkIfPostExists(args.data.post, db);
+    checkIfUserExists(args.data.author, db.users);
+    checkIfPostExists(args.data.post, db.posts);
 
     const comment = {
       id: uuidv1(),
