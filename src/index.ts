@@ -6,7 +6,7 @@ import { SubscriptionServer } from "subscriptions-transport-ws";
 import { makeExecutableSchema } from "graphql-tools";
 import { typeDefs } from "./schema";
 import { resolvers } from "./resolvers";
-import { PubSub } from "graphql-subscriptions";
+import { PubSub } from "graphql-subscriptions/dist/pubsub";
 import db from "./db";
 import uuid from "uuid";
 import { checkIfPostExists, checkIfUserExists, findIndexOfItem } from "./middleware";
@@ -14,7 +14,9 @@ import { checkIfPostExists, checkIfUserExists, findIndexOfItem } from "./middlew
 // graphql-ws
 const app = express();
 const schema = makeExecutableSchema({ typeDefs, resolvers });
-const pubsub = new PubSub();
+export const pubsub = new PubSub();
+console.log(pubsub);
+
 const apolloServer = new ApolloServer({
   schema,
   context: {
