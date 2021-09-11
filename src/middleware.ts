@@ -1,17 +1,22 @@
-import { DB, User, Post, Comment, Users, Posts } from "./types";
+import {
+  DB,
+  User,
+  Post,
+  Comment,
+  Users,
+  Posts,
+  UsersElement,
+  PostsElement,
+} from "./types";
 
 type DBArray = Array<User | Post | Comment | undefined | null>;
 
-function checkIfUserExists(userToFind: string, users: Users) {
-  if (!users.some((user) => user?.id === userToFind)) {
-    throw new Error("User Not Found!");
+function findItem(itemId: string, data: DBArray, itemType: string) {
+  const item = data.find((ele) => ele?.id === itemId);
+  if (!item) {
+    throw new Error(`${itemType} Not Found!`);
   }
-}
-
-function checkIfPostExists(postToFind: string, posts: Posts) {
-  if (!posts.some((post) => post?.id === postToFind && post?.published)) {
-    throw new Error("Post Not Found!");
-  }
+  return item;
 }
 
 function findIndexOfItem(itemId: string, data: DBArray, itemType: string) {
@@ -22,4 +27,4 @@ function findIndexOfItem(itemId: string, data: DBArray, itemType: string) {
   return itemIndex;
 }
 
-export { checkIfUserExists, checkIfPostExists, findIndexOfItem };
+export { findItem, findIndexOfItem };

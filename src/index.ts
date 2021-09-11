@@ -9,24 +9,16 @@ import { resolvers } from "./resolvers";
 import { PubSub } from "graphql-subscriptions/dist/pubsub";
 import db from "./db";
 import uuid from "uuid";
-import { checkIfPostExists, checkIfUserExists, findIndexOfItem } from "./middleware";
+import { findItem, findIndexOfItem } from "./middleware";
 
-// graphql-ws
 const app = express();
 const schema = makeExecutableSchema({ typeDefs, resolvers });
-export const pubsub = new PubSub();
-console.log(pubsub);
-
+const pubsub = new PubSub();
+const httpServer = createServer(app);
+const context = { db, findItem, findIndexOfItem, uuidv1: uuid.v1, pubsub };
 const apolloServer = new ApolloServer({
   schema,
-  context: {
-    db,
-    checkIfUserExists,
-    checkIfPostExists,
-    findIndexOfItem,
-    uuidv1: uuid.v1,
-    pubsub,
-  },
+  context,
   plugins: [
     {
       async serverWillStart() {
@@ -39,10 +31,9 @@ const apolloServer = new ApolloServer({
     },
   ],
 });
-const httpServer = createServer(app);
 const subscriptionServer = SubscriptionServer.create(
   { schema, execute, subscribe },
-  { server: httpServer, path: "/graphql" }
+  { server: httpServer, path: apolloServer.graphqlPath }
 );
 async function startServer() {
   await apolloServer.start();
@@ -52,3 +43,5 @@ async function startServer() {
   });
 }
 startServer();
+
+export { pubsub, context };

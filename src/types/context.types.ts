@@ -11,8 +11,7 @@ interface DB {
 interface Context {
   db: DB;
   pubsub: PubSub;
-  checkIfUserExists: Function;
-  checkIfPostExists: Function;
+  findItem: Function;
   findIndexOfItem: Function;
   uuidv1: Function;
 }

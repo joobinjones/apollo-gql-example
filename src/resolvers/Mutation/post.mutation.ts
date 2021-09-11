@@ -1,13 +1,8 @@
 import { Context, PostsElement, CommentsElement } from "../../types";
 
 export const postMutations = {
-  createPost(
-    parent: any,
-    args: any,
-    { db, checkIfUserExists, uuidv1 }: Context,
-    info: any
-  ) {
-    checkIfUserExists(args.data.author, db.users);
+  createPost(parent: any, args: any, { db, findItem, uuidv1 }: Context, info: any) {
+    findItem(args.data.author, db.users, "User");
     const post = {
       id: uuidv1(),
       ...args.data,
@@ -15,16 +10,9 @@ export const postMutations = {
     db.posts.push(post);
     return post;
   },
-  updatePost(
-    parent: any,
-    { id, data }: any,
-    { db, checkIfPostExists }: Context,
-    info: any
-  ) {
-    const post = db.posts.find((post: PostsElement) => post?.id === id);
-    if (!post) {
-      throw new Error("Post Not Found!");
-    }
+  updatePost(parent: any, { id, data }: any, { db, findItem }: Context, info: any) {
+    const post = findItem(id, db.posts, "Post");
+
     if (typeof data.title === "string") {
       post!.title = data.title;
     }

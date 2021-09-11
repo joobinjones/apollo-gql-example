@@ -1,20 +1,22 @@
 import { Context, CommentsElement } from "../../types";
+import { pubsub } from "../..";
 
 export const commentMutations = {
   createComment(
     parent: any,
     args: any,
-    { db, checkIfUserExists, checkIfPostExists, uuidv1 }: Context,
+    { db, findItem, uuidv1 }: Context,
     info: any
   ) {
-    checkIfUserExists(args.data.author, db.users);
-    checkIfPostExists(args.data.post, db.posts);
+    findItem(args.data.author, db.users, "User");
+    findItem(args.data.post, db.posts, "Post");
 
     const comment = {
       id: uuidv1(),
       ...args.data,
     };
     db.comments.push(comment);
+    pubsub.publish(`COMMENT_${args.data.post}`, { comment });
     return comment;
   },
   updateComment(parent: any, { id, data }: any, { db }: Context, info: any) {

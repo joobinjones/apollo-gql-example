@@ -21,14 +21,8 @@ export const userMutations = {
     db.users.push(user);
     return user;
   },
-  updateUser(
-    parent: any,
-    { id, data }: any,
-    { db, checkIfUserExists }: Context,
-    info: any
-  ) {
-    checkIfUserExists(id, db.users);
-    const user = db.users.find((user: UsersElement) => user?.id === id);
+  updateUser(parent: any, { id, data }: any, { db, findItem }: Context, info: any) {
+    const user = findItem(id, db.users, "User");
     if (typeof data.email === "string") {
       const emailIsTaken = db.users.some(
         (user: UsersElement) => user?.email === data.email
