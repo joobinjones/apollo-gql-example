@@ -19,3 +19,8 @@ type Post {
   author: User!
   comments: [Comment!]!
 }
+
+type PostSubscriptionPayload {
+  mutation: String!
+  data: Post!
+}

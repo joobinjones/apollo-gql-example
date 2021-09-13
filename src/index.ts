@@ -32,7 +32,14 @@ const apolloServer = new ApolloServer({
   ],
 });
 const subscriptionServer = SubscriptionServer.create(
-  { schema, execute, subscribe },
+  {
+    schema,
+    execute,
+    subscribe,
+    onConnect() {
+      return context;
+    },
+  },
   { server: httpServer, path: apolloServer.graphqlPath }
 );
 async function startServer() {
